@@ -47,7 +47,7 @@ def get_args():
   return options
 
 def get_algorithm(options):
-  supported_algorithms = ["SHA256", "scrypt", "X11", "X13", "X15"]
+  supported_algorithms = ["SHA256", "scrypt", "X11", "X13", "X15", "quark"]
   if options.algorithm in supported_algorithms:
     return options.algorithm
   else:
@@ -165,6 +165,12 @@ def generate_hashes_from_block(data_block, algorithm):
     except ImportError:
       sys.exit("Cannot run X15 algorithm: module x15_hash not found")
     header_hash = x15_hash.getPoWHash(data_block)[::-1]
+    elif algorithm == 'quark':
+    try:
+      exec('import %s' % "quark_hash")
+    except ImportError:
+      sys.exit("Cannot run quark algorithm: module quark_hash not found")
+    header_hash = quark_hash.getPoWHash(data_block)[::-1]
   return sha256_hash, header_hash
 
 
